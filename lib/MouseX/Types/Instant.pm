@@ -11,29 +11,17 @@ Mouse::Exporter->setup_import_methods(as_is => [qw(type subtype)]);
 
 sub type (&) {## no critic
     my $code = shift;
-    my $type = _gen_instant_type();
-    Mouse::Util::TypeConstraints::type($type => +{
+    return Mouse::Util::TypeConstraints::type(+{
         where => $code,
     });
-    return $type;
 }
 
 sub subtype ($&) {## no critic
     my ($super_type, $code) = @_;
-
-    my $type = _gen_instant_type();
-    Mouse::Util::TypeConstraints::subtype($type => +{
+    return Mouse::Util::TypeConstraints::subtype(+{
         as    => $super_type,
         where => $code,
     });
-
-    return $type;
-}
-
-my $c = 0;
-sub _gen_instant_type {
-    my ($package, undef, $line) = caller(1);
-    return __PACKAGE__ . "::__ANON__::Type::${package}::Type_${line}_" . ++$c;
 }
 
 1;
